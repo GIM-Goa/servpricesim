@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <meta charset='UTF-8' />
+  <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+  <title>Price Your Boot Camp!</title>
+
+  <!-- minimalist styling -->
+  <style>
+    body{font-family:Arial,Helvetica,sans-serif;margin:0;background:#f4f7fa;color:#333;}
+    header{background:#11468f;color:#fff;padding:1rem;text-align:center;}
+    main{max-width:800px;margin:2rem auto;padding:1rem;background:#fff;border-radius:8px;
+         box-shadow:0 2px 8px rgba(0,0,0,0.1);}
+    img{max-width:100%;border-radius:6px;margin-bottom:1rem;}
+    h2{margin-top:0;}
+    ul{list-style:none;padding:0;}
+    li{margin:0.5rem 0;}
+    button.option{width:100%;padding:0.75rem 1rem;font-size:1rem;border:1px solid #11468f;
+                 background:#fff;border-radius:6px;cursor:pointer;transition:background 0.2s;}
+    button.option:hover{background:#e8f0fe;}
+    button.option.correct{background:#4caf50;color:#fff;border:none;}
+    button.option.incorrect{background:#f44336;color:#fff;border:none;}
+    #nextBtn{margin-top:1rem;padding:0.75rem 1.5rem;font-size:1rem;background:#11468f;
+             color:#fff;border:none;border-radius:6px;cursor:pointer;display:none;}
+    #scoreBoard{margin-top:1rem;font-weight:bold;}
+    footer{margin-top:2rem;text-align:center;font-size:0.9rem;color:#555;}
+  </style>
+</head>
+
+<body>
+  <header><h1>Price Your Boot Camp!</h1></header>
+
+  <main>
+    <img id='stageImg' src='' alt=''>
+    <h2 id='questionText'></h2>
+
+    <ul id='optionsList'></ul>
+    <button id='nextBtn'>Next</button>
+    <div id='scoreBoard'></div>
+  </main>
+
+  <footer>
+    Edited by Dr. Pravat, GIM. It is free for students. Teachers may reach out for a TN.
+  </footer>
+
+  <!-- simulation logic -->
+  <script>
+    /* Fisher–Yates shuffle to randomise option order */
+    function shuffle(arr){
+      for(let i=arr.length-1;i>0;i--){
+        const j=Math.floor(Math.random()*(i+1));
+        [arr[i],arr[j]]=[arr[j],arr[i]];
+      }
+      return arr;
+    }
+
+    /* Scenario data */
+    const stages=[
+      { img:'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=800&q=60',
+        alt:'Strategy whiteboard',
+        q:'Your 50-seat executive-ed boot camp is 120 days away. Which base pricing model do you adopt?',
+        opts:[
+          'Hybrid: early-bird vs. last-minute (dynamic tier)',  // correct
+          'Flat cost-plus mark-up',
+          'Pay-what-you-want experiment'
+        ],
+        correct:0 },
+
+      { img:'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=800&q=60',
+        alt:'Calendar and clock',
+        q:'Early-bird window closes at day 90. What discount maximises expected revenue, given 15 % no-show history?',
+        opts:[
+          '-25 % discount with 10 % non-refundable deposit',     // correct
+          '-40 % discount, fully refundable',
+          'No discount at all'
+        ],
+        correct:0 },
+
+      { img:'https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=800&q=60',
+        alt:'Refund policy debate',
+        q:'What refund policy do you publish for cancellations up to 7 days before the programme?',
+        opts:[
+          '50 % refund + right to resell seat',                  // correct
+          'Full refund any time',
+          'Zero refunds under any circumstance'
+        ],
+        correct:0 },
+
+      { img:'https://images.unsplash.com/photo-1450101215322-bf5cd27642fc?auto=format&fit=crop&w=800&q=60',
+        alt:'Overbooking dashboard',
+        q:'Historical data show 15 % no-show. How many seats will you accept?',
+        opts:[
+          'Book 57 and risk crowding',                           // correct
+          'Book strict 50, leave money on table',
+          'Book 65; trust stand-by list to sort it out'
+        ],
+        correct:0 },
+
+      { img:'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=800&q=60',
+        alt:'Surge pricing alert',
+        q:'An industry conference in Goa spikes demand 5 days before start-date. React?',
+        opts:[
+          'Raise last-minute price by 40 %',                     // correct
+          'Freeze prices—capacity risk is over',
+          'Offer a flash 10 % discount to fill faster'
+        ],
+        correct:0 }
+    ];
+
+    /* State variables */
+    let current=0;
+    let score=0;
+
+    /* Load a stage */
+    function loadStage(){
+      const s=stages[current];
+      document.getElementById('stageImg').src=s.img;
+      document.getElementById('stageImg').alt=s.alt;
+      document.getElementById('questionText').textContent=s.q;
+
+      const list=document.getElementById('optionsList');
+      list.innerHTML='';
+
+      /* randomise option order each time */
+      shuffle([...Array(s.opts.length).keys()]).forEach(i=>{
+        const li=document.createElement('li');
+        const btn=document.createElement('button');
+        btn.className='option';
+        btn.textContent=s.opts[i];
+        btn.onclick=()=>evaluate(i);
+        li.appendChild(btn);
+        list.appendChild(li);
+      });
+
+      document.getElementById('nextBtn').style.display='none';
+    }
+
+    /* Handle an answer click */
+    function evaluate(choice){
+      const s=stages[current];
+      const buttons=[...document.querySelectorAll('.option')];
+      buttons.forEach(b=>b.disabled=true);
+
+      if(choice===s.correct){
+        score+=10;
+        buttons[choice].classList.add('correct');
+      }else{
+        buttons[choice].classList.add('incorrect');
+        buttons[buttons.findIndex(b=>b.textContent===s.opts[s.correct])].classList.add('correct');
+      }
+
+      document.getElementById('scoreBoard').textContent='Score: '+score;
+      document.getElementById('nextBtn').style.display='inline-block';
+    }
+
+    /* Advance to next stage or end */
+    document.getElementById('nextBtn').onclick=()=>{
+      if(++current<stages.length){
+        loadStage();
+      }else{
+        finish();
+      }
+    };
+
+    function finish(){
+      document.getElementById('stageImg').style.display='none';
+      document.getElementById('questionText').textContent='Simulation complete!';
+      document.getElementById('optionsList').innerHTML='';
+      document.getElementById('nextBtn').style.display='none';
+      document.getElementById('scoreBoard').textContent=
+        'Final Score: '+score+' / '+(stages.length*10);
+    }
+
+    window.onload=loadStage;
+  </script>
+</body>
+</html>
