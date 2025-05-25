@@ -8,7 +8,7 @@
 <style>
   body{font-family:Arial,Helvetica,sans-serif;margin:0;background:#f4f7fa;color:#333;}
   header{background:#11468f;color:#fff;padding:1rem;text-align:center;}
-  main{max-width:850px;margin:2rem auto;padding:1rem;background:#fff;border-radius:8px;
+  main{max-width:450px;margin:2rem auto;padding:1rem;background:#fff;border-radius:8px;
        box-shadow:0 2px 8px rgba(0,0,0,0.1);position:relative;overflow:hidden;}
   img{max-width:100%;border-radius:6px;margin-bottom:1rem;}
   h2{margin:0 0 0.5rem 0;}
@@ -55,7 +55,7 @@
 </main>
 
 <footer>
-  Edited by Dr. Pravat, GIM. It is free for students. Teachers may reach out for a TN.
+  Edited by Dr. Pravat, GIM. Free for students. Teachers reach out for a TN.
 </footer>
 
 <script>
@@ -70,7 +70,7 @@ function shuffle(arr){
 
 /* ---------- scenario data ---------- */
 const stages=[
-  { img:'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=800&q=60',
+  { img:'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=400&q=60',
     alt:'Strategy whiteboard',
     q:'Your 50-seat executive-ed boot camp is 120 days away. Which base pricing model do you adopt?',
     opts:[
@@ -80,7 +80,7 @@ const stages=[
     ],
     correct:0 },
 
-  { img:'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=800&q=60',
+  { img:'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=400&q=60',
     alt:'Calendar and clock',
     q:'Early-bird window closes at day 90. What discount maximises expected revenue, given 15% no-show history?',
     opts:[
@@ -90,7 +90,7 @@ const stages=[
     ],
     correct:0 },
 
-  { img:'https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=800&q=60',
+  { img:'https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=400&q=60',
     alt:'Refund policy debate',
     q:'What refund policy do you publish for cancellations up to 7 days before the programme?',
     opts:[
@@ -100,7 +100,7 @@ const stages=[
     ],
     correct:0 },
 
-  { img:'https://images.unsplash.com/photo-1450101215322-bf5cd27642fc?auto=format&fit=crop&w=800&q=60',
+  { img:'https://images.unsplash.com/photo-1450101215322-bf5cd27642fc?auto=format&fit=crop&w=400&q=60',
     alt:'Overbooking dashboard',
     q:'Historical data show 15 % no-show. How many seats will you accept?',
     opts:[
@@ -110,7 +110,7 @@ const stages=[
     ],
     correct:0 },
 
-  { img:'https://images.unsplash.com/photo-1587619954474-d839b9a04dc7?auto=format&fit=crop&w=800&q=60',
+  { img:'https://images.unsplash.com/photo-1587619954474-d839b9a04dc7?auto=format&fit=crop&w=400&q=60',
     alt:'Surge pricing alert',
     q:'An industry conference in Goa spikes demand 5 days before start-date. React?',
     opts:[
@@ -167,8 +167,8 @@ function loadStage(){
 
 /* ---------- timer logic ---------- */
 function startTimer(){
-  seconds=15;
-  timerEl.textContent='⏱️ 15';
+  seconds=21;
+  timerEl.textContent='⏱️ 21';
   clearInterval(timerId);
   timerId=setInterval(()=>{
     seconds--;
@@ -221,7 +221,7 @@ function finish(){
   nextBtn.style.display='none';
   progressEl.style.width='100%';
   renderStars();
-  scoreEl.textContent='Final Score: '+score+' / '+(stages.length*10+75); // 75 = max bonus
+  scoreEl.textContent='Final Score: '+score+' / '+(stages.length*10+100); // 100 = max bonus
 
   if(score>=40) confettiBurst(120);
 }
@@ -229,7 +229,7 @@ function finish(){
 /* ---------- star rating ---------- */
 function renderStars(){
   const max=5;
-  const pct=Math.min(score/((stages.length*10+75)),1);
+  const pct=Math.min(score/((stages.length*10+100)),1);
   const stars=Math.max(1,Math.round(pct*max));
   const starSpan=document.createElement('div');
   starSpan.style.fontSize='1.5rem';
@@ -261,3 +261,4 @@ function confettiBurst(count){
 </script>
 </body>
 </html>
+
